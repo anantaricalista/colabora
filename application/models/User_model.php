@@ -118,6 +118,31 @@ class User_model extends CI_Model {
 			->count_all_results();
 	}
 
+	public function active_employees()
+	{
+		return $this->db
+			->distinct()
+			->select('users.id, users.name')
+			->from('users')
+			->join('user_roles', 'user_roles.user_id = users.id')
+			->where('users.is_active', 1)
+			->where('user_roles.role_code', 'employee')
+			->order_by('users.name', 'ASC')
+			->get()
+			->result();
+	}
+
+	public function is_active_employee($id)
+	{
+		return (bool) $this->db
+			->from('users')
+			->join('user_roles', 'user_roles.user_id = users.id')
+			->where('users.id', $id)
+			->where('users.is_active', 1)
+			->where('user_roles.role_code', 'employee')
+			->count_all_results();
+	}
+
 	public function set_active($id, $active)
 	{
 		return $this->db

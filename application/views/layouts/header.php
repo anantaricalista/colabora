@@ -16,6 +16,10 @@
 		</a>
 		<nav class="d-flex align-items-center flex-wrap gap-3" aria-label="Navigasi utama">
 			<a href="<?php echo html_escape(site_url('dashboard')); ?>">Beranda</a>
+			<?php if (in_array('company_admin', (array) $this->session->userdata('user_roles'), TRUE)
+				|| in_array('employee', (array) $this->session->userdata('user_roles'), TRUE)): ?>
+				<a href="<?php echo html_escape(site_url('projects')); ?>">Proyek</a>
+			<?php endif; ?>
 			<?php if (in_array('company_admin', (array) $this->session->userdata('user_roles'), TRUE)): ?>
 				<a href="<?php echo html_escape(site_url('users')); ?>">Pengguna</a>
 			<?php endif; ?>

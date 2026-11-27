@@ -11,8 +11,10 @@ Current foundation
 
 This repository contains CodeIgniter 3.1.13, an initial authentication and
 account-management foundation, and AdminLTE 4.0.0-rc3 CSS/JavaScript assets.
-Employee, payroll, project, and Co-Balance integration workflows are still
-being developed and their business rules are being agreed incrementally.
+Payroll, employee records, service catalog, and Co-Balance integration
+workflows are still being developed and their business rules are being agreed
+incrementally. The initial project/task workflow and confirmed business
+decisions are documented in ``docs/business-decisions.md``.
 
 Installation and operations
 ===========================

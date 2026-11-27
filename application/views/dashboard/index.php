@@ -25,6 +25,9 @@ foreach ($user_roles as $role)
 </section>
 <section class="mt-4">
 	<h2 class="h5">Co-Labora</h2>
-	<p class="text-secondary">Fondasi aplikasi mandiri sedang disiapkan. Modul karyawan, penggajian, dan proyek akan ditambahkan bertahap setelah aturan kerja disepakati.</p>
+	<p class="text-secondary">Kelola proyek dan tugas sesuai peran Anda. Modul karyawan, penggajian, dan integrasi akan ditambahkan bertahap setelah aturan kerjanya disepakati.</p>
+	<?php if (in_array('company_admin', $user_roles, TRUE) || in_array('employee', $user_roles, TRUE)): ?>
+		<a class="btn btn-primary" href="<?php echo html_escape(site_url('projects')); ?>">Lihat proyek</a>
+	<?php endif; ?>
 </section>
 <?php $this->load->view('layouts/footer'); ?>

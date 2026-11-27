@@ -4,7 +4,7 @@
 
 Repository ini memakai CodeIgniter 3.1.13 dan ditargetkan untuk PHP 8.0.0 sesuai lingkungan pengembangan yang ditentukan. Runtime yang tersedia di workspace implementasi berbeda, sehingga uji runtime PHP 8.0 tetap harus dilakukan di lingkungan target. Satu instalasi dan satu basis data digunakan untuk satu perusahaan; jangan berbagi basis data antarperusahaan.
 
-Fondasi awal menyediakan autentikasi, pengelolaan akun, dan peran yang dapat digabung: Administrator Perusahaan, HRD/Payroll, Finance, dan Karyawan. Administrator mengelola akun dan tidak mendapat akses payroll otomatis. Modul bisnis belum lengkap.
+Fondasi awal menyediakan autentikasi, pengelolaan akun, proyek/tugas, dan peran yang dapat digabung: Administrator Perusahaan, HRD/Payroll, Finance, dan Karyawan. Administrator mengelola akun dan tidak mendapat akses payroll otomatis. Administrator dapat mengganti koordinator proyek dengan karyawan aktif lain. Lihat `docs/business-decisions.md` untuk perilaku yang telah disepakati dan hal yang masih menunggu keputusan.
 
 ## Prasyarat
 
