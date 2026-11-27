@@ -29,4 +29,23 @@ class MY_Controller extends CI_Controller {
 			show_error('Anda tidak memiliki izin untuk mengakses halaman ini.', 403);
 		}
 	}
+
+	protected function post_fields_are_strings($fields, $optional_fields = array())
+	{
+		foreach ($fields as $field)
+		{
+			$value = $this->input->post($field, FALSE);
+			if (in_array($field, $optional_fields, TRUE) && ($value === NULL || $value === ''))
+			{
+				continue;
+			}
+
+			if ( ! is_string($value))
+			{
+				return FALSE;
+			}
+		}
+
+		return TRUE;
+	}
 }

@@ -22,6 +22,14 @@
 			<?php endif; ?>
 			<?php if (in_array('company_admin', (array) $this->session->userdata('user_roles'), TRUE)): ?>
 				<a href="<?php echo html_escape(site_url('users')); ?>">Pengguna</a>
+				<a href="<?php echo html_escape(site_url('settings')); ?>">Pengaturan</a>
+			<?php endif; ?>
+			<?php if (in_array('hr_payroll', (array) $this->session->userdata('user_roles'), TRUE)): ?>
+				<a href="<?php echo html_escape(site_url('employees')); ?>">Karyawan</a>
+			<?php endif; ?>
+			<?php if (in_array('employee', (array) $this->session->userdata('user_roles'), TRUE)
+				|| in_array('hr_payroll', (array) $this->session->userdata('user_roles'), TRUE)): ?>
+				<a href="<?php echo html_escape(site_url('attendance')); ?>">Absensi</a>
 			<?php endif; ?>
 			<span class="text-secondary"><?php echo html_escape($this->session->userdata('user_name')); ?></span>
 			<?php echo form_open('logout', array('class' => 'm-0')); ?>

@@ -12,8 +12,13 @@ class User_model extends CI_Model {
 
 		$user = $this->db
 			->select('id, name, email, password_hash')
+			->join('employee_profiles', 'employee_profiles.user_id = users.id', 'left')
 			->where('email', $email)
-			->where('is_active', 1)
+			->where('users.is_active', 1)
+			->group_start()
+				->where('employee_profiles.user_id IS NULL', NULL, FALSE)
+				->or_where('employee_profiles.employment_status', 'active')
+			->group_end()
 			->get('users')
 			->row();
 
@@ -43,6 +48,65 @@ class User_model extends CI_Model {
 
 		unset($user->password_hash, $user->email);
 		return $user;
+	}
+
+	public function is_active($id)
+	{
+		return (bool) $this->db
+			->from('users')
+			->join('employee_profiles', 'employee_profiles.user_id = users.id', 'left')
+			->where('users.id', $id)
+			->where('users.is_active', 1)
+			->group_start()
+				->where('employee_profiles.user_id IS NULL', NULL, FALSE)
+				->or_where('employee_profiles.employment_status', 'active')
+			->group_end()
+			->count_all_results();
+	}
+
+	public function unprofiled_employee_accounts()
+	{
+		return $this->db
+			->distinct()
+			->select('users.id, users.name, users.email')
+			->from('users')
+			->join('user_roles', 'user_roles.user_id = users.id')
+			->join('employee_profiles', 'employee_profiles.user_id = users.id', 'left')
+			->where('users.is_active', 1)
+			->where('user_roles.role_code', 'employee')
+			->where('employee_profiles.user_id IS NULL', NULL, FALSE)
+			->order_by('users.name', 'ASC')
+			->get()
+			->result();
+	}
+
+	public function active_employees()
+	{
+		return $this->db
+			->distinct()
+			->select('users.id, users.name')
+			->from('users')
+			->join('user_roles', 'user_roles.user_id = users.id')
+			->join('employee_profiles', 'employee_profiles.user_id = users.id')
+			->where('users.is_active', 1)
+			->where('employee_profiles.employment_status', 'active')
+			->where('user_roles.role_code', 'employee')
+			->order_by('users.name', 'ASC')
+			->get()
+			->result();
+	}
+
+	public function is_active_employee($id)
+	{
+		return (bool) $this->db
+			->from('users')
+			->join('user_roles', 'user_roles.user_id = users.id')
+			->join('employee_profiles', 'employee_profiles.user_id = users.id')
+			->where('users.id', $id)
+			->where('users.is_active', 1)
+			->where('employee_profiles.employment_status', 'active')
+			->where('user_roles.role_code', 'employee')
+			->count_all_results();
 	}
 
 	public function all()
@@ -85,14 +149,6 @@ class User_model extends CI_Model {
 		return (int) $this->db->count_all('users');
 	}
 
-	public function is_active($id)
-	{
-		return (bool) $this->db
-			->where('id', $id)
-			->where('is_active', 1)
-			->count_all_results('users');
-	}
-
 	public function find($id)
 	{
 		$user = $this->db
@@ -115,31 +171,6 @@ class User_model extends CI_Model {
 			->join('user_roles', 'user_roles.user_id = users.id')
 			->where('users.is_active', 1)
 			->where('user_roles.role_code', 'company_admin')
-			->count_all_results();
-	}
-
-	public function active_employees()
-	{
-		return $this->db
-			->distinct()
-			->select('users.id, users.name')
-			->from('users')
-			->join('user_roles', 'user_roles.user_id = users.id')
-			->where('users.is_active', 1)
-			->where('user_roles.role_code', 'employee')
-			->order_by('users.name', 'ASC')
-			->get()
-			->result();
-	}
-
-	public function is_active_employee($id)
-	{
-		return (bool) $this->db
-			->from('users')
-			->join('user_roles', 'user_roles.user_id = users.id')
-			->where('users.id', $id)
-			->where('users.is_active', 1)
-			->where('user_roles.role_code', 'employee')
 			->count_all_results();
 	}
 

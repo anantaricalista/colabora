@@ -25,7 +25,7 @@ Atur environment variable di konfigurasi PHP-FPM/container atau mekanisme rahasi
 | `COLABORA_DB_NAME` | Nama basis data khusus instalasi ini. |
 | `COLABORA_DB_USER` | Pengguna basis data dengan hak minimum yang diperlukan. |
 | `COLABORA_DB_PASSWORD` | Kata sandi basis data. |
-| `COLABORA_ENCRYPTION_KEY` | Kunci rahasia acak yang hanya tersedia di server; wajib sebelum menyimpan rahasia integrasi. |
+| `COLABORA_ENCRYPTION_KEY` | Kunci acak minimal 32 karakter yang hanya tersedia di server; wajib untuk mengenkripsi bukti foto absensi dan rahasia integrasi. Simpan terpisah dari backup database; kehilangan kunci membuat bukti tidak dapat dipulihkan. |
 
 Buat basis data dan akun database dengan charset `utf8mb4`. Pastikan direktori `application/cache` dan `application/logs` hanya dapat ditulis oleh akun aplikasi.
 
@@ -51,7 +51,11 @@ unset COLABORA_ADMIN_NAME COLABORA_ADMIN_EMAIL COLABORA_ADMIN_PASSWORD
 
 Gunakan kata sandi unik minimal 12 karakter dan hapus variabel dari shell setelah setup. Perintah hanya membuat akun administrator apabila tabel pengguna masih kosong. Administrator kemudian dapat membuat akun dengan satu atau beberapa peran.
 
-Setelah instalasi, pastikan `CI_ENV=production`, HTTPS aktif, dan endpoint migrasi hanya digunakan melalui CLI. Jika TLS dihentikan di reverse proxy, konfigurasikan web server agar PHP mengenali koneksi sebagai HTTPS; jangan mempercayai header forwarding yang dapat dikirim langsung oleh klien. Jangan menampilkan error PHP/database kepada pengguna.
+Setelah instalasi, pastikan `CI_ENV=production`, `COLABORA_ENCRYPTION_KEY` tersedia, HTTPS aktif, dan endpoint migrasi hanya digunakan melalui CLI. Kamera dan geolokasi browser hanya bekerja pada HTTPS atau origin localhost. Jika TLS dihentikan di reverse proxy, konfigurasikan web server agar PHP mengenali koneksi sebagai HTTPS; jangan mempercayai header forwarding yang dapat dikirim langsung oleh klien. Jangan menampilkan error PHP/database kepada pengguna.
+
+## Pengaturan dan absensi
+
+Pengaturan zona waktu perusahaan menyediakan WIB (default), WITA, dan WIT. Foto absensi dienkripsi sebelum disimpan sebagai BLOB di database. Backup database standar turut berisi bukti tersebut; backup khusus absensi dan optimasinya ditunda sampai uji fungsional lokal, bukan berarti backup standar boleh diabaikan.
 
 ## Catatan integrasi
 

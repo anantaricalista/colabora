@@ -21,6 +21,20 @@ Dokumen ini mencatat keputusan yang sudah disepakati. Hal-hal yang belum diputus
 - Progres dihitung dari tugas selesai dengan bobot sama. Proyek aktif otomatis selesai ketika sedikitnya satu tugas ada dan seluruh tugas selesai. Koordinator juga dapat menyelesaikan proyek lebih awal dan membuka kembali proyek selesai.
 - Administrator perusahaan dapat mengganti koordinator kapan saja dengan akun karyawan aktif.
 
+## Karyawan dan absensi
+
+- Setiap karyawan memiliki akun aplikasi. Administrator mengelola akun/peran; HRD/Payroll mengelola profil karyawan: nomor karyawan internal, jabatan, departemen opsional, tanggal mulai, dan status aktif/nonaktif.
+- Profil nonaktif memblokir login; status akun yang dinonaktifkan Administrator tetap dihormati.
+- Absensi MVP memakai satu check-in dan satu check-out per tanggal perusahaan; aplikasi hanya menyimpan waktu mentah, tanpa menghitung terlambat, lembur, atau potongan.
+- Zona waktu perusahaan dipilih Administrator pada Pengaturan: WIB (default), WITA, atau WIT. Tidak ada geofence; koordinat hanya bukti lokasi.
+- Setiap tindakan mandiri mengambil satu foto dan koordinat baru; aplikasi tidak menampilkan pratinjau video langsung. Izin kamera/lokasi dan persetujuan eksplisit diperlukan.
+- Foto dan koordinat disimpan sebagai BLOB terenkripsi di basis data. Karyawan hanya dapat melihat bukti miliknya; HRD/Payroll yang ditunjuk dapat melihat bukti untuk verifikasi.
+- Bukti dari browser adalah data kiriman perangkat dan bukan verifikasi anti-pemalsuan; geolokasi tidak dibatasi geofence.
+- Jika perangkat/izin tidak tersedia, check-in/check-out mandiri diblokir dan HRD/Payroll dapat membuat pengecualian manual dengan alasan wajib.
+- HRD/Payroll dapat mengoreksi waktu; setiap perubahan mencatat nilai lama/baru, pelaku, waktu, dan alasan pada riwayat audit yang tidak diedit melalui aplikasi.
+- Retensi otomatis bukti foto/lokasi belum ditetapkan. Bukti tidak dihapus otomatis sampai kebijakan retensi disepakati; kebijakan ini harus ditinjau sebelum penggunaan produksi.
+- Optimasi backup khusus absensi ditunda sampai uji fungsional lokal. Backup database biasa mencakup BLOB bukti dan tetap perlu dilindungi sejak awal.
+
 ## Integrasi Co-Balance
 
 - Setiap item jasa pada satu penjualan akan membuat proyek tersendiri, dengan referensi transaksi penjualan bersama untuk menghubungkan proyek-proyek tersebut.
@@ -40,4 +54,5 @@ Dokumen ini mencatat keputusan yang sudah disepakati. Hal-hal yang belum diputus
 - Status dan alur persetujuan proyek di luar aturan aktif/selesai yang telah dipilih.
 - Data pelanggan, master jasa mandiri, dan model hubungan layanan dengan proyek.
 - Formula, dasar pajak, periode efektif, pembulatan, dan perlakuan hukum payroll; aturan tersebut perlu ditinjau sebelum penghitungan otomatis diterapkan.
+- Jangka waktu retensi bukti foto/lokasi absensi dan proses penghapusan setelah periode retensi.
 - Kontrak endpoint, izin, status pengiriman, retry, dan idempotensi integrasi transaksi.
