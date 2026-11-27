@@ -32,7 +32,7 @@ Dokumen ini mencatat keputusan yang sudah disepakati. Hal-hal yang belum diputus
 - Bukti dari browser adalah data kiriman perangkat dan bukan verifikasi anti-pemalsuan; geolokasi tidak dibatasi geofence.
 - Jika perangkat/izin tidak tersedia, check-in/check-out mandiri diblokir dan HRD/Payroll dapat membuat pengecualian manual dengan alasan wajib.
 - HRD/Payroll dapat mengoreksi waktu; setiap perubahan mencatat nilai lama/baru, pelaku, waktu, dan alasan pada riwayat audit yang tidak diedit melalui aplikasi.
-- Retensi otomatis bukti foto/lokasi belum ditetapkan. Bukti tidak dihapus otomatis sampai kebijakan retensi disepakati; kebijakan ini harus ditinjau sebelum penggunaan produksi.
+- Bukti foto/lokasi tidak dihapus otomatis; penghapusan dilakukan manual. Aplikasi belum menyediakan alur penghapusan, sehingga pihak berwenang dan prosedurnya harus disepakati sebelum penggunaan produksi.
 - Optimasi backup khusus absensi ditunda sampai uji fungsional lokal. Backup database biasa mencakup BLOB bukti dan tetap perlu dilindungi sejak awal.
 
 ## Integrasi Co-Balance
@@ -54,5 +54,5 @@ Dokumen ini mencatat keputusan yang sudah disepakati. Hal-hal yang belum diputus
 - Status dan alur persetujuan proyek di luar aturan aktif/selesai yang telah dipilih.
 - Data pelanggan, master jasa mandiri, dan model hubungan layanan dengan proyek.
 - Formula, dasar pajak, periode efektif, pembulatan, dan perlakuan hukum payroll; aturan tersebut perlu ditinjau sebelum penghitungan otomatis diterapkan.
-- Jangka waktu retensi bukti foto/lokasi absensi dan proses penghapusan setelah periode retensi.
+- Pihak yang berwenang dan prosedur penghapusan manual bukti foto/lokasi absensi.
 - Kontrak endpoint, izin, status pengiriman, retry, dan idempotensi integrasi transaksi.

@@ -3,6 +3,7 @@
 Setiap instalasi Co-Labora memakai basis data khusus untuk satu perusahaan. Batasi akses backup karena data karyawan dan payroll bersifat sensitif. Simpan backup terenkripsi di lokasi terpisah dari server aplikasi, batasi aksesnya, dan jangan taruh file backup di repository.
 
 Backup database mencakup foto serta koordinat absensi terenkripsi yang disimpan sebagai BLOB. Kunci `COLABORA_ENCRYPTION_KEY` harus dicadangkan terpisah di secret store; backup database tanpa kunci yang cocok tidak dapat digunakan untuk menampilkan bukti.
+Menghapus bukti dari database aktif tidak menghapus salinan yang sudah ada di backup; kelola siklus hidup backup secara terpisah.
 
 Gunakan akun database melalui file opsi MySQL di luar repository dengan izin baca hanya untuk pemilik (`0600`); jangan memasukkan kata sandi dalam argumen perintah atau log. Contoh berikut memakai environment variable nama database yang sama dengan konfigurasi instalasi:
 
