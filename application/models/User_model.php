@@ -11,7 +11,7 @@ class User_model extends CI_Model {
 		}
 
 		$user = $this->db
-			->select('id, name, email, password_hash, role')
+			->select('id, name, email, password_hash')
 			->where('email', $email)
 			->where('is_active', 1)
 			->get('users')
@@ -19,6 +19,13 @@ class User_model extends CI_Model {
 
 		if ( ! $user || ! password_verify($password, $user->password_hash))
 		{
+			return FALSE;
+		}
+
+		$user->roles = $this->roles_for_user($user->id);
+		if (empty($user->roles))
+		{
+			log_message('error', 'Akun pengguna ID '.$user->id.' tidak memiliki peran yang ditetapkan.');
 			return FALSE;
 		}
 
@@ -40,11 +47,37 @@ class User_model extends CI_Model {
 
 	public function all()
 	{
-		return $this->db
-			->select('id, name, email, role, is_active, created_at')
-			->order_by('name', 'ASC')
-			->get('users')
+		$rows = $this->db
+			->select('users.id, users.name, users.email, users.is_active, users.created_at, user_roles.role_code')
+			->from('users')
+			->join('user_roles', 'user_roles.user_id = users.id', 'left')
+			->order_by('users.name', 'ASC')
+			->get()
 			->result();
+
+		$users = array();
+		foreach ($rows as $row)
+		{
+			$id = (int) $row->id;
+			if ( ! isset($users[$id]))
+			{
+				$users[$id] = (object) array(
+					'id' => $id,
+					'name' => $row->name,
+					'email' => $row->email,
+					'is_active' => $row->is_active,
+					'created_at' => $row->created_at,
+					'roles' => array(),
+				);
+			}
+
+			if ($row->role_code !== NULL)
+			{
+				$users[$id]->roles[] = $row->role_code;
+			}
+		}
+
+		return array_values($users);
 	}
 
 	public function count_all()
@@ -52,21 +85,37 @@ class User_model extends CI_Model {
 		return (int) $this->db->count_all('users');
 	}
 
+	public function is_active($id)
+	{
+		return (bool) $this->db
+			->where('id', $id)
+			->where('is_active', 1)
+			->count_all_results('users');
+	}
+
 	public function find($id)
 	{
-		return $this->db
-			->select('id, role, is_active')
+		$user = $this->db
+			->select('id, is_active')
 			->where('id', $id)
 			->get('users')
 			->row();
+		if ($user)
+		{
+			$user->roles = $this->roles_for_user($user->id);
+		}
+
+		return $user;
 	}
 
 	public function count_active_admins()
 	{
 		return (int) $this->db
-			->where('role', 'company_admin')
-			->where('is_active', 1)
-			->count_all_results('users');
+			->from('users')
+			->join('user_roles', 'user_roles.user_id = users.id')
+			->where('users.is_active', 1)
+			->where('user_roles.role_code', 'company_admin')
+			->count_all_results();
 	}
 
 	public function set_active($id, $active)
@@ -82,14 +131,55 @@ class User_model extends CI_Model {
 	public function create($data)
 	{
 		$now = date('Y-m-d H:i:s');
-		return $this->db->insert('users', array(
+		$this->db->trans_begin();
+		$created = $this->db->insert('users', array(
 			'name' => $data['name'],
 			'email' => $data['email'],
 			'password_hash' => password_hash($data['password'], PASSWORD_DEFAULT),
-			'role' => $data['role'],
 			'is_active' => 1,
 			'created_at' => $now,
 			'updated_at' => $now,
 		));
+
+		if ( ! $created)
+		{
+			$this->db->trans_rollback();
+			return FALSE;
+		}
+
+		$user_id = $this->db->insert_id();
+		foreach ($data['roles'] as $role)
+		{
+			if ( ! $this->db->insert('user_roles', array(
+				'user_id' => $user_id,
+				'role_code' => $role,
+			)))
+			{
+				$this->db->trans_rollback();
+				return FALSE;
+			}
+		}
+
+		if ( ! $this->db->trans_status())
+		{
+			$this->db->trans_rollback();
+			return FALSE;
+		}
+
+		return $this->db->trans_commit();
+	}
+
+	private function roles_for_user($user_id)
+	{
+		$rows = $this->db
+			->select('role_code')
+			->where('user_id', $user_id)
+			->order_by('role_code', 'ASC')
+			->get('user_roles')
+			->result();
+
+		return array_map(function ($row) {
+			return $row->role_code;
+		}, $rows);
 	}
 }

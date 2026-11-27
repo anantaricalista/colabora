@@ -4,7 +4,7 @@
 
 Repository ini memakai CodeIgniter 3.1.13 dan ditargetkan untuk PHP 8.0.0 sesuai lingkungan pengembangan yang ditentukan. Runtime yang tersedia di workspace implementasi berbeda, sehingga uji runtime PHP 8.0 tetap harus dilakukan di lingkungan target. Satu instalasi dan satu basis data digunakan untuk satu perusahaan; jangan berbagi basis data antarperusahaan.
 
-Fondasi awal menyediakan autentikasi, peran Administrator Perusahaan, HRD/Payroll, dan Finance, serta migrasi tabel pengguna. Modul bisnis belum lengkap. Admin mengelola akun aplikasi dan tidak mendapat akses payroll otomatis.
+Fondasi awal menyediakan autentikasi, pengelolaan akun, dan peran yang dapat digabung: Administrator Perusahaan, HRD/Payroll, Finance, dan Karyawan. Administrator mengelola akun dan tidak mendapat akses payroll otomatis. Modul bisnis belum lengkap.
 
 ## Prasyarat
 
@@ -49,7 +49,7 @@ php index.php setup create_admin
 unset COLABORA_ADMIN_NAME COLABORA_ADMIN_EMAIL COLABORA_ADMIN_PASSWORD
 ```
 
-Gunakan kata sandi unik minimal 12 karakter dan hapus variabel dari shell setelah setup. Perintah hanya membuat akun administrator apabila tabel pengguna masih kosong. Administrator kemudian dapat membuat akun HRD/Payroll, Finance, atau administrator tambahan.
+Gunakan kata sandi unik minimal 12 karakter dan hapus variabel dari shell setelah setup. Perintah hanya membuat akun administrator apabila tabel pengguna masih kosong. Administrator kemudian dapat membuat akun dengan satu atau beberapa peran.
 
 Setelah instalasi, pastikan `CI_ENV=production`, HTTPS aktif, dan endpoint migrasi hanya digunakan melalui CLI. Jika TLS dihentikan di reverse proxy, konfigurasikan web server agar PHP mengenali koneksi sebagai HTTPS; jangan mempercayai header forwarding yang dapat dikirim langsung oleh klien. Jangan menampilkan error PHP/database kepada pengguna.
 

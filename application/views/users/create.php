@@ -19,15 +19,18 @@ $this->load->view('layouts/header', array('page_title' => $page_title));
 				<label class="form-label" for="email">Email</label>
 				<input class="form-control" id="email" name="email" type="email" maxlength="190" required value="<?php echo html_escape(set_value('email')); ?>">
 			</div>
-			<div class="mb-3">
-				<label class="form-label" for="role">Peran</label>
-				<select class="form-select" id="role" name="role" required>
-					<option value="">Pilih peran</option>
-					<?php foreach ($roles as $value => $label): ?>
-						<option value="<?php echo html_escape($value); ?>" <?php echo set_select('role', $value); ?>><?php echo html_escape($label); ?></option>
-					<?php endforeach; ?>
-				</select>
-			</div>
+			<fieldset class="mb-3">
+				<legend class="form-label">Peran (dapat memilih lebih dari satu)</legend>
+				<?php foreach ($roles as $value => $label): ?>
+					<div class="form-check">
+						<input class="form-check-input" id="role_<?php echo html_escape($value); ?>" name="roles[]" type="checkbox" value="<?php echo html_escape($value); ?>" <?php echo in_array($value, (array) $this->input->post('roles'), TRUE) ? 'checked="checked"' : ''; ?>>
+						<label class="form-check-label" for="role_<?php echo html_escape($value); ?>"><?php echo html_escape($label); ?></label>
+					</div>
+				<?php endforeach; ?>
+				<?php if ($roles_error !== ''): ?>
+					<div class="text-danger mt-2" role="alert"><?php echo html_escape($roles_error); ?></div>
+				<?php endif; ?>
+			</fieldset>
 			<div class="mb-4">
 				<label class="form-label" for="password">Kata sandi awal (minimal 12 karakter)</label>
 				<input class="form-control" id="password" name="password" type="password" minlength="12" maxlength="255" autocomplete="new-password" required>

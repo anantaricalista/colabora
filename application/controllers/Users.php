@@ -7,6 +7,7 @@ class Users extends MY_Controller {
 		'company_admin' => 'Administrator Perusahaan',
 		'hr_payroll' => 'HRD / Payroll',
 		'finance' => 'Finance',
+		'employee' => 'Karyawan',
 	);
 
 	public function __construct()
@@ -30,16 +31,19 @@ class Users extends MY_Controller {
 	{
 		$this->form_validation->set_rules('name', 'Nama', 'required|max_length[150]');
 		$this->form_validation->set_rules('email', 'Email', 'required|valid_email|max_length[190]|is_unique[users.email]');
-		$this->form_validation->set_rules('role', 'Peran', 'required|in_list[company_admin,hr_payroll,finance]');
+		$this->form_validation->set_rules('roles', 'Peran', 'required');
 		$this->form_validation->set_rules('password', 'Kata sandi', 'required|min_length[12]|max_length[255]');
 
 		$error = '';
-		if ($this->input->method(TRUE) === 'POST' && $this->form_validation->run() === TRUE)
+		$roles_error = '';
+		$submitted_roles = $this->input->post('roles');
+		$roles_valid = $this->valid_roles($submitted_roles);
+		if ($this->input->method(TRUE) === 'POST' && $this->form_validation->run() === TRUE && $roles_valid)
 		{
 			$created = $this->User_model->create(array(
 				'name' => trim($this->input->post('name', TRUE)),
 				'email' => strtolower(trim($this->input->post('email', TRUE))),
-				'role' => $this->input->post('role', TRUE),
+				'roles' => $submitted_roles,
 				'password' => $this->input->post('password', FALSE),
 			));
 
@@ -51,10 +55,15 @@ class Users extends MY_Controller {
 
 			$error = 'Akun tidak dapat dibuat. Silakan periksa data dan coba lagi.';
 		}
+		elseif ($this->input->method(TRUE) === 'POST' && ! $roles_valid)
+		{
+			$roles_error = 'Pilih setidaknya satu peran yang tersedia.';
+		}
 
 		$this->load->view('users/create', array(
 			'roles' => $this->roles,
 			'error' => $error,
+			'roles_error' => $roles_error,
 		));
 	}
 
@@ -76,7 +85,7 @@ class Users extends MY_Controller {
 			show_error('Administrator tidak dapat menonaktifkan akunnya sendiri.', 403);
 		}
 
-		if ($user->role === 'company_admin' && (int) $user->is_active === 1
+		if (in_array('company_admin', $user->roles, TRUE) && (int) $user->is_active === 1
 			&& $this->User_model->count_active_admins() <= 1)
 		{
 			$this->session->set_flashdata('error', 'Akun administrator aktif terakhir tidak dapat dinonaktifkan.');
@@ -90,5 +99,26 @@ class Users extends MY_Controller {
 
 		$this->session->set_flashdata('success', 'Status akun pengguna berhasil diperbarui.');
 		redirect('users');
+	}
+
+	private function valid_roles($roles)
+	{
+		if ( ! is_array($roles) || empty($roles))
+		{
+			return FALSE;
+		}
+
+		$seen = array();
+		foreach ($roles as $role)
+		{
+			if ( ! is_string($role) || ! isset($this->roles[$role]) || isset($seen[$role]))
+			{
+				return FALSE;
+			}
+
+			$seen[$role] = TRUE;
+		}
+
+		return TRUE;
 	}
 }

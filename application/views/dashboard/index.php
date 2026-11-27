@@ -6,12 +6,21 @@ $role_labels = array(
 	'company_admin' => 'Administrator Perusahaan',
 	'hr_payroll' => 'HRD / Payroll',
 	'finance' => 'Finance',
+	'employee' => 'Karyawan',
 );
+$display_roles = array();
+foreach ($user_roles as $role)
+{
+	if (isset($role_labels[$role]))
+	{
+		$display_roles[] = $role_labels[$role];
+	}
+}
 ?>
 <section class="card shadow-sm">
 	<div class="card-body p-4">
 		<h1 class="h4">Selamat datang, <?php echo html_escape($user_name); ?></h1>
-		<p class="text-secondary mb-0">Peran: <?php echo html_escape(isset($role_labels[$user_role]) ? $role_labels[$user_role] : 'Pengguna'); ?></p>
+		<p class="text-secondary mb-0">Peran: <?php echo html_escape(implode(', ', $display_roles)); ?></p>
 	</div>
 </section>
 <section class="mt-4">

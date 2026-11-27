@@ -16,7 +16,7 @@
 		</a>
 		<nav class="d-flex align-items-center flex-wrap gap-3" aria-label="Navigasi utama">
 			<a href="<?php echo html_escape(site_url('dashboard')); ?>">Beranda</a>
-			<?php if ($this->session->userdata('user_role') === 'company_admin'): ?>
+			<?php if (in_array('company_admin', (array) $this->session->userdata('user_roles'), TRUE)): ?>
 				<a href="<?php echo html_escape(site_url('users')); ?>">Pengguna</a>
 			<?php endif; ?>
 			<span class="text-secondary"><?php echo html_escape($this->session->userdata('user_name')); ?></span>

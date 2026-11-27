@@ -23,7 +23,16 @@ $this->load->view('layouts/header', array('page_title' => $page_title));
 					<tr>
 						<td><?php echo html_escape($user->name); ?></td>
 						<td><?php echo html_escape($user->email); ?></td>
-						<td><?php echo html_escape(isset($roles[$user->role]) ? $roles[$user->role] : 'Tidak dikenal'); ?></td>
+						<td>
+							<?php
+							$user_role_labels = array();
+							foreach ($user->roles as $role)
+							{
+								$user_role_labels[] = isset($roles[$role]) ? $roles[$role] : 'Tidak dikenal';
+							}
+							echo html_escape(implode(', ', $user_role_labels));
+							?>
+						</td>
 						<td><?php echo $user->is_active ? 'Aktif' : 'Nonaktif'; ?></td>
 						<td>
 							<?php if ((int) $user->id !== (int) $this->session->userdata('user_id')): ?>

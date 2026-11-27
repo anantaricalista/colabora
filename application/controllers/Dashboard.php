@@ -7,7 +7,7 @@ class Dashboard extends MY_Controller {
 	{
 		$this->load->view('dashboard/index', array(
 			'user_name' => $this->session->userdata('user_name'),
-			'user_role' => $this->session->userdata('user_role'),
+			'user_roles' => (array) $this->session->userdata('user_roles'),
 		));
 	}
 }

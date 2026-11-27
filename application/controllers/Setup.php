@@ -34,7 +34,7 @@ class Setup extends CI_Controller {
 		$created = $this->User_model->create(array(
 			'name' => trim($name),
 			'email' => strtolower(trim($email)),
-			'role' => 'company_admin',
+			'roles' => array('company_admin'),
 			'password' => $password,
 		));
 
